@@ -1,0 +1,17 @@
+steps:
+  # build the container image
+- name: "gcr.io/cloud-builders/docker"
+  args: ["build", "-t", "gcr.io/kuber-project-418102/container_1:latest", "./container_1"]
+  # push container image
+- name: "gcr.io/cloud-builders/docker"
+  args: ["push", "gcr.io/kuber-project-418102/container_1:latest"]
+  # deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=./container_1/kubernetes/
+  - --image=gcr.io/kuber-project-418102/container_1:latest
+  - --location=us-central1-a
+  - --cluster=kuber-project-418102-cluster
+options:
+  logging: CLOUD_LOGGING_ONLY
